@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-950 text-white select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRAINROT CLIC 🚽🗿</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .font-meme { font-family: 'Permanent Marker', cursive; }
+
+        @keyframes float-up {
+            0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+            50% { transform: translateY(-50px) scale(1.3) rotate(15deg); }
+            100% { opacity: 0; transform: translateY(-130px) scale(0.6) rotate(-15deg); }
+        }
+        .float-text {
+            position: absolute;
+            animation: float-up 0.85s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+            pointer-events: none;
+        }
+
+        /* Particle Emojis Animation */
+        @keyframes particle-fly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(1.5) rotate(360deg); }
+        }
+        .emoji-particle {
+            position: absolute;
+            animation: particle-fly 0.75s ease-out forwards;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        /* Shockwave Ripple Effect */
+        @keyframes shockwave {
+            0% { width: 100px; height: 100px; opacity: 0.9; border-width: 6px; }
+            100% { width: 340px; height: 340px; opacity: 0; border-width: 1px; }
+        }
+        .ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border-style: solid;
+            pointer-events: none;
+            animation: shockwave 0.5s ease-out forwards;
+            z-index: 20;
+        }
+
+        @keyframes fever-pulse {
+            0%, 100% { filter: hue-rotate(0deg) contrast(1.3); transform: scale(1); }
+            50% { filter: hue-rotate(180deg) contrast(1.6); transform: scale(1.02); }
+        }
+        .fever-mode {
+            animation: fever-pulse 0.35s linear infinite;
+        }
+
+        /* Clicker Emoji Wobble Animation */
+        @keyframes meme-wobble {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.15) rotate(-12deg); }
+            50% { transform: scale(0.95) rotate(10deg); }
+            75% { transform: scale(1.1) rotate(-6deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .wobble-active {
+            animation: meme-wobble 0.25s ease-in-out;
+        }
+
+        /* Rarity Glows */
+        .rarity-common { border-color: #94a3b8; box-shadow: 0 0 10px rgba(148, 163, 184, 0.3); }
+        .rarity-rare { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .rarity-epic { border-color: #a855f7; box-shadow: 0 0 18px rgba(168, 85, 247, 0.6); }
+        .rarity-legendary { border-color: #eab308; box-shadow: 0 0 22px rgba(234, 179, 8, 0.8); }
+        .rarity-mythic { border-color: #ef4444; box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); animation: pulse 1.5s infinite; }
+
+        @keyframes screen-shake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-6px, 6px); }
+            40% { transform: translate(-6px, -6px); }
+            60% { transform: translate(6px, 6px); }
+            80% { transform: translate(6px, -6px); }
+        }
+        .shake { animation: screen-shake 0.2s ease-in-out; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
+
+        @keyframes fly-across {
+            0% { left: -10%; top: var(--flying-y); opacity: 1; transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.3) rotate(180deg); }
+            100% { left: 110%; top: var(--flying-y); opacity: 1; transform: scale(1) rotate(360deg); }
+        }
+        .flying-meme {
+            position: absolute;
+            z-index: 60;
+            cursor: pointer;
+            animation: fly-across 4s linear forwards;
+            filter: drop-shadow(0 0 12px rgba(234, 179, 8, 0.8));
+        }
+
+        /* Themes */
+        .theme-gold { background-color: #0f0a00 !important; }
+        .theme-gold header { background-color: #1a1200 !important; border-color: #eab308 !important; }
+        .theme-synth { background-color: #0d021a !important; }
+        .theme-synth header { background-color: #1e0536 !important; border-color: #ec4899 !important; }
+    </style>
+</head>
+<body id="game-body" class="h-full overflow-x-hidden flex flex-col bg-slate-950 text-slate-100 transition-all duration-300">
+
+    <!-- TOP BAR / HEADER -->
+    <header class="w-full bg-slate-900/90 border-b border-purple-500/30 p-3 sticky top-0 z-50 backdrop-blur-md shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            
+            <!-- Logo & Level Info -->
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <span class="text-4xl animate-pulse">👑</span>
+                    <span id="fever-badge" class="hidden absolute -top-2 -right-2 bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded-full animate-bounce">RAGE</span>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black font-meme tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-purple-400 to-amber-400">
+                        BRAINROT CLIC
+                    </h1>
+                    <div class="flex items-center gap-2">
+                        <span id="player-profile-name" onclick="changeUsername()" class="text-xs font-bold text-amber-300 cursor-pointer hover:underline" title="Cliquer pour changer de nom">👤 Anonymous Sigma</span>
+                        <span class="text-slate-600">•</span>
+                        <span id="level-title" class="text-xs font-bold text-pink-400">Niv. 1 : NPC</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XP Bar & Level Progress -->
+            <div class="w-full md:w-64 bg-slate-800/80 p-2 rounded-xl border border-slate-700">
+                <div class="flex justify-between text-xs font-bold mb-1">
+                    <span class="text-purple-300">Niveau <span id="player-level">1</span></span>
+                    <span class="text-slate-400" id="xp-text">0 / 250 XP</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-700">
+                    <div id="xp-bar" class="bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Main Score counter -->
+            <div class="bg-slate-950/80 border border-purple-500/50 px-5 py-2 rounded-2xl flex flex-col items-center shadow-inner">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Brainrot Points</div>
+                <div class="text-2xl md:text-3xl font-extrabold text-amber-400 font-mono tracking-tight" id="score">0</div>
+                <div class="text-[11px] text-emerald-400 font-semibold" id="per-second">+0 /sec</div>
+            </div>
+
+            <!-- Controls (Audio & Modals Toggles) -->
+            <div class="flex items-center gap-2 flex-wrap">
+                <button onclick="openPassModal()" class="px-3 py-2 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 border border-pink-400/50 rounded-xl text-xs font-black flex items-center gap-1.5 transition shadow-lg active:scale-95 cursor-pointer">
+                    <span>📜</span> SEASON PASS
+                </button>
+                <button onclick="openCosmeticsModal()" class="px-3 py-2 bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 border border-amber-300/50 rounded-xl text-xs font-black flex items-center gap-1.5 transition shadow-lg active:scale-95 text-slate-950 cursor-pointer">
+                    <span>👑</span> SHOP VIP
+                </button>
+                <button onclick="openCollectionModal()" class="px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border border-purple-400/50 rounded-xl text-xs font-black flex items-center gap-1.5 transition shadow-lg active:scale-95 cursor-pointer">
+                    <span>🗿</span> BRAINROTS
+                </button>
+                <button onclick="openRebirthModal()" class="px-3 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 border border-emerald-400/50 rounded-xl text-xs font-black flex items-center gap-1.5 transition shadow-lg active:scale-95 cursor-pointer">
+                    <span>🔄</span> REBIRTH
+                </button>
+                <button onclick="toggleAudio()" id="sound-btn" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer">
+                    <span>🔊</span> <span id="sound-status" class="text-emerald-400">ON</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN GAME LAYOUT -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 my-2">
+        
+        <!-- LEFT COLUMN: Mini-games & Crates -->
+        <section class="lg:col-span-3 flex flex-col gap-4">
+            
+            <!-- Crate Loot / Gacha Card -->
+            <div class="bg-slate-900/70 border border-amber-500/40 rounded-2xl p-4 flex flex-col items-center justify-between shadow-xl relative overflow-hidden backdrop-blur">
+                <div class="absolute -right-4 -top-4 text-6xl opacity-10">🎁</div>
+                <div class="flex justify-between w-full items-center mb-1">
+                    <h2 class="text-md font-extrabold text-amber-300 font-meme tracking-wide flex items-center gap-1.5">
+                        📦 MEME CRATE
+                    </h2>
+                    <span id="crate-timer" class="text-[10px] bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">Prêt !</span>
+                </div>
+                <p class="text-xs text-slate-400 text-center mb-3">Toutes les 20 min : Ouvre pour obtenir des boosts ou du Fever instantané !</p>
+                
+                <button id="open-crate-btn" onclick="openMemeCrate()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 rounded-xl font-extrabold text-slate-950 text-xs shadow-lg active:scale-95 transition transform border border-amber-300/40 cursor-pointer flex items-center justify-center gap-2">
+                    <span>🎁</span> OUVRIR (GRATUIT)
+                </button>
+            </div>
+
+            <!-- Mewing Mini-Game Card -->
+            <div class="bg-slate-900/70 border border-purple-500/30 rounded-2xl p-4 flex flex-col items-center justify-between shadow-xl relative overflow-hidden backdrop-blur">
+                <div class="absolute -right-6 -top-6 text-6xl opacity-10">🗿</div>
+                <h2 class="text-md font-extrabold text-purple-300 font-meme tracking-wide flex items-center gap-2">
+                    🗿 Mewing Challenge
+                </h2>
+                <p class="text-xs text-slate-400 text-center my-1.5">Maintiens le bouton appuyé pour accumuler un bonus Sigma (jusqu'à x3.0) !</p>
+                
+                <div class="w-full bg-slate-800 rounded-full h-3 mb-2 border border-slate-700 overflow-hidden">
+                    <div id="mewing-bar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full w-0 transition-all duration-75"></div>
+                </div>
+
+                <div class="text-xs font-bold text-amber-400 mb-2">Multiplicateur Sigma: <span id="mewing-mult">x1.0</span></div>
+
+                <button id="mewing-btn" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-black text-xs text-white shadow-lg active:scale-95 transition transform border border-purple-400/40 cursor-pointer">
+                    🤫 SHHH... MEWING EN COURS
+                </button>
+            </div>
+
+            <!-- Rizz Minigame Card -->
+            <div class="bg-slate-900/70 border border-pink-500/30 rounded-2xl p-4 flex flex-col items-center justify-between shadow-xl relative overflow-hidden backdrop-blur">
+                <div class="absolute -right-6 -top-6 text-6xl opacity-10">😏</div>
+                <h2 class="text-md font-extrabold text-pink-300 font-meme tracking-wide flex items-center gap-2">
+                    😏 Rizz Timing
+                </h2>
+                <p class="text-xs text-slate-400 text-center my-1.5">Clique au bon moment dans la zone verte (+10 XP & Points bonus) !</p>
+
+                <!-- Timing Bar -->
+                <div class="w-full bg-slate-800 h-7 rounded-lg relative overflow-hidden my-2 border border-slate-700">
+                    <div class="absolute top-0 bottom-0 bg-emerald-500/40 border-x-2 border-emerald-400 left-[40%] w-[20%]"></div>
+                    <div id="rizz-pointer" class="absolute top-0 bottom-0 w-2 bg-pink-500 shadow-[0_0_10px_#ec4899] left-0 transition-none"></div>
+                </div>
+
+                <button onclick="attemptRizz()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 rounded-xl font-black text-xs text-white shadow-lg active:scale-95 transition transform border border-pink-400/40 cursor-pointer">
+                    ✨ UNSPOKEN RIZZ !
+                </button>
+            </div>
+
+            <!-- Achievements Box -->
+            <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-3 flex-1 flex flex-col">
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1">
+                    🏆 Succès (<span id="ach-count">0</span>/<span id="ach-total">0</span>)
+                </h3>
+                <div id="achievements-list" class="space-y-1.5 overflow-y-auto max-h-36 pr-1 text-[11px]">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CENTER COLUMN: Main Clicker & Combo Fever -->
+        <section class="lg:col-span-5 flex flex-col items-center justify-between relative min-h-[420px] bg-slate-900/30 border border-slate-800/60 rounded-3xl p-6 backdrop-blur overflow-hidden">
+            <!-- Floating Text & Particle Container -->
+            <div id="click-effects" class="absolute inset-0 pointer-events-none z-30 overflow-hidden rounded-3xl"></div>
+
+            <!-- Target Title Badge & Rarity Indicator -->
+            <div class="text-center flex flex-col items-center gap-1">
+                <div class="flex items-center gap-2 flex-wrap justify-center">
+                    <span id="target-title" class="px-4 py-1.5 bg-purple-950/80 border border-purple-500/50 rounded-full text-xs font-black text-pink-300 tracking-wider uppercase shadow-lg">
+                        Skibidi Toilet
+                    </span>
+                    <span id="equipped-rarity" class="px-2.5 py-1 text-[10px] font-black rounded-full uppercase border">
+                        COMMUN
+                    </span>
+                    <span id="rebirth-badge" class="px-2 py-0.5 bg-emerald-950 border border-emerald-500 text-emerald-300 text-[10px] font-black rounded-full hidden">
+                        REBIRTH <span id="rebirth-level-tag">0</span>
+                    </span>
+                </div>
+                <div class="text-[11px] font-semibold text-purple-300">
+                    Bonus EXP: <span id="rarity-xp-mult" class="text-amber-400 font-bold">x1.0</span> | Bonus Pts: <span id="rarity-pts-mult" class="text-emerald-400 font-bold">x1.0</span>
+                </div>
+            </div>
+
+            <!-- Combo & Fever Gauge -->
+            <div class="w-full max-w-xs bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 my-2 flex flex-col items-center">
+                <div class="flex justify-between w-full text-xs font-black mb-1">
+                    <span class="text-amber-400 font-meme">COMBO FEVER</span>
+                    <span id="combo-multiplier-text" class="text-pink-400 font-mono">x1.0</span>
+                </div>
+                <div class="w-full bg-slate-900 h-3 rounded-full overflow-hidden border border-slate-700 relative">
+                    <div id="fever-bar" class="bg-gradient-to-r from-amber-400 via-orange-500 to-rose-600 h-full w-0 transition-all duration-100"></div>
+                </div>
+            </div>
+
+            <!-- MAIN CLICKABLE BUTTON -->
+            <div class="relative group my-auto flex items-center justify-center">
+                <!-- Glowing Aura -->
+                <div id="clicker-aura" class="absolute -inset-6 bg-gradient-to-r from-pink-600 via-purple-600 to-amber-500 rounded-full blur-2xl opacity-40 group-hover:opacity-75 transition duration-300 animate-pulse"></div>
+                
+                <button id="main-clicker" class="relative w-64 h-64 md:w-72 md:h-72 bg-gradient-to-b from-slate-800 to-slate-950 rounded-full border-4 border-pink-500/50 flex flex-col items-center justify-center text-8xl md:text-9xl shadow-2xl active:scale-90 transition-transform duration-75 cursor-pointer outline-none select-none">
+                    <span id="clicker-emoji" class="transform transition duration-150 inline-block">🚽</span>
+                </button>
+            </div>
+
+            <!-- Active Boost Status -->
+            <div id="active-boost-tag" class="h-6 flex items-center justify-center">
+                <span class="text-xs text-slate-400 font-semibold animate-pulse">
+                    🔥 CLIQUE RAPIDEMENT POUR DÉCLENCHER LE FEVER MODE 🔥
+                </span>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: Upgrades Shop -->
+        <section class="lg:col-span-4 bg-slate-900/70 border border-slate-800 rounded-2xl p-4 flex flex-col backdrop-blur shadow-xl">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-lg font-black text-amber-400 font-meme tracking-wider flex items-center gap-2">
+                    🛒 BRAINROT SHOP
+                </h2>
+                <span class="text-[11px] font-bold text-slate-400">Clic: <span id="stat-cpc" class="text-pink-400">1</span> | Sec: <span id="stat-cps" class="text-emerald-400">0</span></span>
+            </div>
+
+            <div id="upgrades-list" class="flex-1 overflow-y-auto space-y-2.5 pr-1 max-h-[540px]">
+                <!-- Upgrades injected via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MEME CRATE MODAL / REWARD POPUP -->
+    <div id="crate-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-amber-400/60 rounded-3xl p-6 max-w-sm w-full flex flex-col items-center text-center shadow-2xl relative">
+            <div class="text-7xl mb-2 animate-bounce">🎁</div>
+            <h3 class="text-2xl font-black font-meme text-amber-400 mb-1">MEME CRATE OUVERTE !</h3>
+            <p class="text-xs text-slate-300 mb-4" id="crate-result-desc">Tu as obtenu un super loot !</p>
+            
+            <div class="bg-slate-950 border border-amber-500/30 rounded-2xl p-4 w-full mb-5 flex flex-col items-center">
+                <span id="crate-reward-icon" class="text-4xl mb-1">🔥</span>
+                <span id="crate-reward-title" class="text-lg font-extrabold text-pink-400 font-meme">+500 Brainrot Points</span>
+            </div>
+
+            <button onclick="closeCrateModal()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 rounded-xl font-black text-slate-950 text-sm shadow-lg active:scale-95 transition cursor-pointer">
+                RÉCUPÉRER LE LOOT !
+            </button>
+        </div>
+    </div>
+
+    <!-- LEVEL UP MODAL NOTIFICATION -->
+    <div id="levelup-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-purple-500/60 rounded-3xl p-6 max-w-sm w-full flex flex-col items-center text-center shadow-2xl relative animate-bounce">
+            <div class="text-7xl mb-2">⚡</div>
+            <h3 class="text-2xl font-black font-meme text-purple-400 mb-1">LEVEL UP !</h3>
+            <p class="text-xs text-slate-300 mb-3" id="levelup-title-text">Tu as passé un niveau !</p>
+            <button onclick="document.getElementById('levelup-modal').classList.add('hidden')" class="w-full py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-black text-xs rounded-xl shadow cursor-pointer">
+                CONTINUER 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- SEASON PASS MODAL -->
+    <div id="pass-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-pink-500/60 rounded-3xl p-6 max-w-2xl w-full flex flex-col shadow-2xl relative max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800">
+                <div>
+                    <h3 class="text-2xl font-black font-meme text-pink-400 flex items-center gap-2">
+                        📜 SEASON 1 : BRAINROT PASS
+                    </h3>
+                    <p class="text-xs text-slate-400">Gagne de l'EXP en jouant pour débloquer les 10 Tiers de récompenses de saison !</p>
+                </div>
+                <button onclick="closePassModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-black text-sm flex items-center justify-center transition cursor-pointer">✕</button>
+            </div>
+
+            <div id="pass-tiers-grid" class="space-y-2.5 overflow-y-auto p-1 flex-1 max-h-[60vh]">
+                <!-- Tiers injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- BRAINROT COLLECTION / SELECTION MODAL -->
+    <div id="collection-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-purple-500/60 rounded-3xl p-6 max-w-2xl w-full flex flex-col shadow-2xl relative max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800">
+                <div>
+                    <h3 class="text-2xl font-black font-meme text-purple-400 flex items-center gap-2">
+                        🗿 GALERIE DES BRAINROTS
+                    </h3>
+                    <p class="text-xs text-slate-400">Débloque des Brainrots plus rares aux paliers de niveau pour booster ton EXP et tes points !</p>
+                </div>
+                <button onclick="closeCollectionModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-black text-sm flex items-center justify-center transition cursor-pointer">✕</button>
+            </div>
+
+            <div id="brainrot-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 overflow-y-auto p-1 flex-1 max-h-[60vh]">
+                <!-- Cards injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP COSMETICS & TITLES SHOP MODAL -->
+    <div id="cosmetics-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-amber-400/60 rounded-3xl p-6 max-w-2xl w-full flex flex-col shadow-2xl relative max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800">
+                <div>
+                    <h3 class="text-2xl font-black font-meme text-amber-400 flex items-center gap-2">
+                        👑 BOUTIQUE VIP & COSMÉTIQUES
+                    </h3>
+                    <p class="text-xs text-slate-400">Dépense tes Points Brainrot pour débloquer des Titres Flex, des Thèmes et des Effets de Clic !</p>
+                </div>
+                <button onclick="closeCosmeticsModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-black text-sm flex items-center justify-center transition cursor-pointer">✕</button>
+            </div>
+
+            <div id="cosmetics-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto p-1 flex-1 max-h-[60vh]">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- REBIRTH MODAL -->
+    <div id="rebirth-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-emerald-500/60 rounded-3xl p-6 max-w-md w-full flex flex-col items-center text-center shadow-2xl relative">
+            <div class="text-6xl mb-2">🔄</div>
+            <h3 class="text-2xl font-black font-meme text-emerald-400 mb-1">SIGMA ASCENSION (REBIRTH)</h3>
+            <p class="text-xs text-slate-300 mb-4">Réinitialise tes points et améliorations pour débloquer un multiplicateur **Rebirth permanent** et des Auras Légendaires !</p>
+            
+            <div class="bg-slate-950 border border-emerald-500/30 rounded-2xl p-4 w-full mb-4 space-y-2 text-xs">
+                <div class="flex justify-between font-bold">
+                    <span class="text-slate-400">Niveau de Rebirth Actuel :</span>
+                    <span id="current-rebirth-count" class="text-emerald-400">0</span>
+                </div>
+                <div class="flex justify-between font-bold">
+                    <span class="text-slate-400">Bonus Permanent Actuel :</span>
+                    <span id="current-rebirth-bonus" class="text-amber-400">x1.0</span>
+                </div>
+                <div class="flex justify-between font-bold border-t border-slate-800 pt-2">
+                    <span class="text-slate-200">Nouveau Bonus après Rebirth :</span>
+                    <span id="next-rebirth-bonus" class="text-emerald-300 font-black text-sm">x1.5</span>
+                </div>
+                <div class="text-[10px] text-amber-400 font-semibold mt-1" id="rebirth-req-text">
+                    Requis : 500 000 Points Brainrot
+                </div>
+            </div>
+
+            <div class="flex gap-2 w-full">
+                <button onclick="closeRebirthModal()" class="w-1/2 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition cursor-pointer">
+                    ANNULER
+                </button>
+                <button id="confirm-rebirth-btn" onclick="performRebirth()" class="w-1/2 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition cursor-pointer">
+                    EFFECTUER LE REBIRTH 🔄
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ========================================================
+           STATE & CONFIGURATION
+           ======================================================== */
+        const BRAINROT_CATALOG = [
+            { id: 'skibidi', name: 'Skibidi Toilet', emoji: '🚽', rarity: 'common', reqLevel: 1, cost: 0, xpBonus: 1.0, ptsBonus: 1.0 },
+            { id: 'rizzler', name: 'Baby Rizzler', emoji: '😏', rarity: 'common', reqLevel: 5, cost: 500, xpBonus: 1.2, ptsBonus: 1.2 },
+            { id: 'mewing', name: 'Mewing Expert', emoji: '🗿', rarity: 'rare', reqLevel: 12, cost: 2500, xpBonus: 1.5, ptsBonus: 1.5 },
+            { id: 'fanum', name: 'Fanum Taxer', emoji: '🍔', rarity: 'rare', reqLevel: 25, cost: 10000, xpBonus: 2.0, ptsBonus: 2.0 },
+            { id: 'ohio', name: 'Ohio Boss', emoji: '🌀', rarity: 'epic', reqLevel: 45, cost: 50000, xpBonus: 3.0, ptsBonus: 3.0 },
+            { id: 'kaicenat', name: 'Kai Cenat W', emoji: '🔥', rarity: 'epic', reqLevel: 70, cost: 200000, xpBonus: 4.5, ptsBonus: 4.5 },
+            { id: 'gigachad', name: 'GigaChad Sigma', emoji: '🗿', rarity: 'legendary', reqLevel: 100, cost: 1000000, xpBonus: 7.0, ptsBonus: 7.0 },
+            { id: 'sigmagod', name: 'Supreme Sigma God', emoji: '👑', rarity: 'mythic', reqLevel: 150, cost: 5000000, xpBonus: 12.0, ptsBonus: 12.0 }
+        ];
+
+        let state = {
+            username: 'Sigma Male #1',
+            score: 0,
+            level: 1,
+            xp: 0,
+            xpToNextLevel: 250,
+            clickPower: 1,
+            perSecond: 0,
+            totalClicks: 0,
+            rizzCount: 0,
+            mewingMultiplier: 1.0,
+            audioEnabled: true,
+            equippedBrainrotId: 'skibidi',
+            unlockedBrainrots: ['skibidi'],
+            rebirthCount: 0,
+            rebirthMultiplier: 1.0,
+            feverGauge: 0,
+            isFeverActive: false,
+            feverMultiplier: 1.0,
+            crateReady: true,
+            crateCooldown: 1200,
+            crateTimer: 0,
+            tempMultiplier: 1.0,
+            boostTimeRemaining: 0,
+            purchasedCosmetics: [],
+            activeTitleBonus: 1.0,
+            activeClickEffect: 'default',
+            activeTheme: 'default',
+            claimedPassTiers: []
+        };
+
+        const SEASON_PASS_TIERS = [
+            { tier: 1, reqLevel: 2, reward: '+500 Points Brainrot', icon: '💰', action: (s) => { s.score += 500; } },
+            { tier: 2, reqLevel: 5, reward: 'Titre : Skibidi Cadet', icon: '🎗️', action: (s) => { s.activeTitleBonus += 0.05; } },
+            { tier: 3, reqLevel: 10, reward: '+2,500 Points Brainrot', icon: '💰', action: (s) => { s.score += 2500; } },
+            { tier: 4, reqLevel: 15, reward: 'Boost de Clic Permanent (+5/clic)', icon: '⚡', action: (s) => { s.clickPower += 5; } },
+            { tier: 5, reqLevel: 20, reward: 'Caisse Mystère Légendaire Instantanée', icon: '🎁', action: (s) => { s.score += 15000; activateFeverMode(); } },
+            { tier: 6, reqLevel: 30, reward: 'Titre : Gyatt General', icon: '👑', action: (s) => { s.activeTitleBonus += 0.15; } },
+            { tier: 7, reqLevel: 40, reward: '+50,000 Points Brainrot', icon: '💎', action: (s) => { s.score += 50000; } },
+            { tier: 8, reqLevel: 60, reward: 'Boost Auto-Clicker (+200/sec)', icon: '🤖', action: (s) => { s.perSecond += 200; } },
+            { tier: 9, reqLevel: 80, reward: 'Multiplicateur Sigma x1.25', icon: '🔥', action: (s) => { s.activeTitleBonus += 0.25; } },
+            { tier: 10, reqLevel: 100, reward: 'Skin Secrète : Golden GigaChad 🏆', icon: '🗿', action: (s) => { if (!s.unlockedBrainrots.includes('sigmagod')) s.unlockedBrainrots.push('sigmagod'); } }
+        ];
+
+        const COSMETICS_CATALOG = [
+            { id: 'title_ceo', name: 'Titre : CEO of Skibidi', desc: '+15% Multiplicateur permanent', type: 'title', bonus: 1.15, cost: 5000, icon: '👑' },
+            { id: 'title_gyatt', name: 'Titre : Gyatt Magnet', desc: '+30% Multiplicateur permanent', type: 'title', bonus: 1.30, cost: 25000, icon: '🍑' },
+            { id: 'title_ohio', name: 'Titre : King of Ohio', desc: '+50% Multiplicateur permanent', type: 'title', bonus: 1.50, cost: 100000, icon: '🌀' },
+            { id: 'eff_coins', name: 'Effet Clic : Pluie de Cash 💰', desc: 'Des billets jaillissent à chaque clic', type: 'effect', effectId: 'coins', cost: 12000, icon: '💸' },
+            { id: 'eff_laser', name: 'Effet Clic : Cyber Lasers ⚡', desc: 'Des éclairs néon à chaque impact', type: 'effect', effectId: 'laser', cost: 30000, icon: '🔮' },
+            { id: 'theme_gold', name: 'Thème : GigaChad Gold 🏆', desc: 'Interface dorée de haute valeur', type: 'theme', themeClass: 'theme-gold', cost: 50000, icon: '✨' },
+            { id: 'theme_synth', name: 'Thème : Cyber Synthwave 🌆', desc: 'Ambiance néon violette rétro', type: 'theme', themeClass: 'theme-synth', cost: 80000, icon: '🌌' }
+        ];
+
+        let upgrades = [
+            { id: 'skibidi', name: 'Auto Skibidi Clicker', cost: 25, cps: 1, cpc: 0, count: 0, icon: '🚽', desc: '+1 point/sec' },
+            { id: 'fanum', name: 'Fanum Tax Machine', cost: 100, cps: 4, cpc: 1, count: 0, icon: '🍔', desc: '+4/sec, +1/clic' },
+            { id: 'kai', name: 'Kai Cenat W Stream', cost: 450, cps: 15, cpc: 3, count: 0, icon: '🔥', desc: '+15/sec, +3/clic' },
+            { id: 'jawline', name: 'Jawline Trainer', cost: 1200, cps: 40, cpc: 8, count: 0, icon: '🗿', desc: '+40/sec, +8/clic' },
+            { id: 'ohio', name: 'Ohio Portal Generator', cost: 3500, cps: 120, cpc: 25, count: 0, icon: '🌀', desc: '+120/sec, +25/clic' },
+            { id: 'gyatt', name: 'Gyatt Factory', cost: 14000, cps: 450, cpc: 80, count: 0, icon: '🍑', desc: '+450/sec, +80/clic' },
+            { id: 'god', name: 'Sigma Overlord Shrine', cost: 75000, cps: 2000, cpc: 400, count: 0, icon: '👑', desc: '+2000/sec, +400/clic' }
+        ];
+
+        let achievements = [
+            { id: 'c1', title: 'Premier Brainrot', desc: 'Faire 1 clic', req: () => state.totalClicks >= 1, unlocked: false },
+            { id: 'c100', title: 'Brainrot Intensif', desc: 'Faire 100 clics', req: () => state.totalClicks >= 100, unlocked: false },
+            { id: 'lvl5', title: 'Sigma Apprenti', desc: 'Atteindre le niveau 5', req: () => state.level >= 5, unlocked: false },
+            { id: 'rizz1', title: 'Unspoken Rizz', desc: 'Réussir 1 Rizz Timing (+10 XP)', req: () => state.rizzCount >= 1, unlocked: false },
+            { id: 'reb1', title: 'Reborn Sigma', desc: 'Faire 1 Rebirth', req: () => state.rebirthCount >= 1, unlocked: false }
+        ];
+
+        /* ========================================================
+           SOUND & AUDIO EFFECTS
+           ======================================================== */
+        function playSynthSound(freqs, type = 'sine', duration = 0.1) {
+            if (!state.audioEnabled) return;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                freqs.forEach((freq, index) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + index * 0.05);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime + index * 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + index * 0.05 + duration);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + index * 0.05);
+                    osc.stop(ctx.currentTime + index * 0.05 + duration);
+                });
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            state.audioEnabled = !state.audioEnabled;
+            const statusEl = document.getElementById('sound-status');
+            if (statusEl) {
+                statusEl.innerText = state.audioEnabled ? 'ON' : 'OFF';
+                statusEl.className = state.audioEnabled ? 'text-emerald-400' : 'text-rose-400';
+            }
+        }
+
+        /* ========================================================
+           UI & EFFECTS HELPER FUNCTIONS
+           ======================================================== */
+        function createFloatingText(x, y, text) {
+            if (!clickEffects) return;
+            const el = document.createElement('div');
+            el.className = 'float-text text-amber-300 font-extrabold text-xl z-50 font-meme drop-shadow-md';
+            el.innerText = text;
+            const rect = clickEffects.getBoundingClientRect();
+            el.style.left = `${x - rect.left}px`;
+            el.style.top = `${y - rect.top}px`;
+            clickEffects.appendChild(el);
+            setTimeout(() => el.remove(), 850);
+        }
+
+        function spawnParticleBurst(x, y) {
+            if (!clickEffects) return;
+            const particles = ['🚽', '🗿', '⚡', '🍔', '✨', '💥'];
+            const count = state.isFeverActive ? 8 : 4;
+            const rect = clickEffects.getBoundingClientRect();
+
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'emoji-particle text-xl';
+                p.innerText = particles[Math.floor(Math.random() * particles.length)];
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 80 + 40;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance - 50;
+
+                p.style.left = `${x - rect.left}px`;
+                p.style.top = `${y - rect.top}px`;
+                p.style.setProperty('--tw-translate-x', `${tx}px`);
+                p.style.setProperty('--tw-translate-y', `${ty}px`);
+
+                clickEffects.appendChild(p);
+                setTimeout(() => p.remove(), 750);
+            }
+        }
+
+        function triggerRipple() {
+            if (!clickEffects) return;
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple border-pink-400/80';
+            clickEffects.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 500);
+        }
+
+        function triggerScreenShake() {
+            const body = document.getElementById('game-body');
+            if (body) {
+                body.classList.remove('shake');
+                void body.offsetWidth;
+                body.classList.add('shake');
+            }
+        }
+
+        /* ========================================================
+           XP & LEVELING SYSTEM
+           ======================================================== */
+        function addXP(amount) {
+            state.xp += amount;
+            if (state.xp >= state.xpToNextLevel) {
+                state.level++;
+                state.xp -= state.xpToNextLevel;
+                state.xpToNextLevel = Math.round(state.xpToNextLevel * 1.6);
+                
+                playSynthSound([523, 659, 783, 1046], 'square', 0.3);
+                showLevelUpModal();
+            }
+            updateXPBar();
+        }
+
+        function updateXPBar() {
+            const playerLvlEl = document.getElementById('player-level');
+            const xpTextEl = document.getElementById('xp-text');
+            const xpBarEl = document.getElementById('xp-bar');
+            const levelTitleEl = document.getElementById('level-title');
+
+            if (playerLvlEl) playerLvlEl.innerText = state.level;
+            if (xpTextEl) xpTextEl.innerText = `${Math.round(state.xp)} / ${state.xpToNextLevel} XP`;
+            if (xpBarEl) {
+                const pct = Math.min(100, Math.max(0, (state.xp / state.xpToNextLevel) * 100));
+                xpBarEl.style.width = `${pct}%`;
+            }
+
+            const titles = ['NPC', 'Baby Rizzler', 'Skibidi Lord', 'GigaChad Sigma', 'Ohio Conqueror', 'Gyatt God', 'Supreme Overlord'];
+            const titleIndex = Math.min(titles.length - 1, Math.floor(state.level / 5));
+            if (levelTitleEl) levelTitleEl.innerText = `Niv. ${state.level} : ${titles[titleIndex]}`;
+        }
+
+        function showLevelUpModal() {
+            const modal = document.getElementById('levelup-modal');
+            const titles = ['NPC', 'Baby Rizzler', 'Skibidi Lord', 'GigaChad Sigma', 'Ohio Conqueror', 'Gyatt God', 'Supreme Overlord'];
+            const titleIndex = Math.min(titles.length - 1, Math.floor(state.level / 5));
+            const titleText = document.getElementById('levelup-title-text');
+            if (titleText) titleText.innerText = `Nouveau Titre : ${titles[titleIndex]}`;
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('hidden'), 2200);
+            }
+        }
+
+        /* ========================================================
+           FEVER & COMBO MODE
+           ======================================================== */
+        function increaseFever(amount) {
+            state.feverGauge = Math.min(100, state.feverGauge + amount);
+            updateFeverBar();
+
+            if (state.feverGauge >= 100 && !state.isFeverActive) {
+                activateFeverMode();
+            }
+        }
+
+        function activateFeverMode() {
+            state.isFeverActive = true;
+            state.feverMultiplier = 5.0;
+            
+            const badge = document.getElementById('fever-badge');
+            if (badge) badge.classList.remove('hidden');
+
+            const aura = document.getElementById('clicker-aura');
+            if (aura) aura.classList.add('fever-mode');
+
+            playSynthSound([523, 659, 783, 1046], 'sawtooth', 0.4);
+            createFloatingText(window.innerWidth / 2, window.innerHeight / 2, '⚡ SIGMA RAGE ACTIVÉ (x5 PTS) !');
+
+            setTimeout(() => {
+                state.isFeverActive = false;
+                state.feverMultiplier = 1.0;
+                state.feverGauge = 0;
+                updateFeverBar();
+
+                if (badge) badge.classList.add('hidden');
+                if (aura) aura.classList.remove('fever-mode');
+            }, 8000);
+        }
+
+        function updateFeverBar() {
+            const bar = document.getElementById('fever-bar');
+            const multText = document.getElementById('combo-multiplier-text');
+            if (bar) bar.style.width = `${state.feverGauge}%`;
+            if (multText) multText.innerText = state.isFeverActive ? 'x5.0 RAGE!' : `x${(1 + (state.feverGauge / 100)).toFixed(1)}`;
+        }
+
+        function changeUsername() {
+            const newName = prompt("Entre ton pseudo de Sigma :", state.username);
+            if (newName && newName.trim() !== "") {
+                state.username = newName.trim();
+                updateUsernameUI();
+                saveProgress();
+            }
+        }
+
+        function updateUsernameUI() {
+            const el = document.getElementById('player-profile-name');
+            if (el) el.innerText = `👤 ${state.username}`;
+        }
+
+        /* Season Pass Functions */
+        function openPassModal() {
+            renderPassTiers();
+            document.getElementById('pass-modal').classList.remove('hidden');
+        }
+
+        function closePassModal() {
+            document.getElementById('pass-modal').classList.add('hidden');
+        }
+
+        function renderPassTiers() {
+            const grid = document.getElementById('pass-tiers-grid');
+            if (!grid) return;
+
+            grid.innerHTML = SEASON_PASS_TIERS.map(t => {
+                const isReached = state.level >= t.reqLevel;
+                const isClaimed = state.claimedPassTiers.includes(t.tier);
+
+                let statusHTML = '';
+                if (isClaimed) {
+                    statusHTML = `<span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/80 px-2 py-1 rounded-full border border-emerald-500/40">RÉCUPÉRÉ ✅</span>`;
+                } else if (isReached) {
+                    statusHTML = `<button onclick="claimPassTier(${t.tier})" class="px-3 py-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-xs rounded-lg shadow active:scale-95 transition">RÉCLAMER !</button>`;
+                } else {
+                    statusHTML = `<span class="text-[10px] text-slate-500 font-semibold">Niveau ${t.reqLevel} requis</span>`;
+                }
+
+                return `
+                    <div class="bg-slate-950/80 border ${isReached ? 'border-pink-500/50' : 'border-slate-800'} rounded-xl p-3 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">${t.icon}</span>
+                            <div>
+                                <div class="text-xs font-black text-slate-200">Palier ${t.tier} : <span class="text-pink-300">${t.reward}</span></div>
+                                <div class="text-[10px] text-slate-400">Débloqué au Niveau ${t.reqLevel}</div>
+                            </div>
+                        </div>
+                        ${statusHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function claimPassTier(tierNum) {
+            const tier = SEASON_PASS_TIERS.find(t => t.tier === tierNum);
+            if (!tier || state.level < tier.reqLevel || state.claimedPassTiers.includes(tierNum)) return;
+
+            tier.action(state);
+            state.claimedPassTiers.push(tierNum);
+            playSynthSound([523, 659, 783, 1046], 'triangle', 0.25);
+            renderPassTiers();
+            updateDisplay();
+            saveProgress();
+        }
+
+        /* ========================================================
+           MINI-GAMES & MEME CRATE
+           ======================================================== */
+        let mewingInterval = null;
+
+        function startMewing() {
+            if (mewingInterval) return;
+            mewingInterval = setInterval(() => {
+                state.mewingMultiplier = Math.min(3.0, state.mewingMultiplier + 0.1);
+                const bar = document.getElementById('mewing-bar');
+                const multEl = document.getElementById('mewing-mult');
+                if (bar) bar.style.width = `${((state.mewingMultiplier - 1.0) / 2.0) * 100}%`;
+                if (multEl) multEl.innerText = `x${state.mewingMultiplier.toFixed(1)}`;
+            }, 100);
+        }
+
+        function stopMewing() {
+            if (mewingInterval) {
+                clearInterval(mewingInterval);
+                mewingInterval = null;
+            }
+            setTimeout(() => {
+                state.mewingMultiplier = 1.0;
+                const bar = document.getElementById('mewing-bar');
+                const multEl = document.getElementById('mewing-mult');
+                if (bar) bar.style.width = '0%';
+                if (multEl) multEl.innerText = 'x1.0';
+            }, 1500);
+        }
+
+        function attemptRizz() {
+            const pointer = document.getElementById('rizz-pointer');
+            if (!pointer) return;
+            const pointerPos = parseFloat(pointer.style.left) || 0;
+            
+            // Success zone is 40% to 60%
+            if (pointerPos >= 40 && pointerPos <= 60) {
+                state.rizzCount++;
+                addXP(10); // Donnne 10 XP
+                state.score += Math.max(100, Math.round(state.clickPower * 10));
+                playSynthSound([600, 800, 1000], 'sine', 0.2);
+                createFloatingText(window.innerWidth / 2, window.innerHeight / 2, 'UNSPOKEN RIZZ ! +10 XP');
+            } else {
+                playSynthSound([200, 150], 'sawtooth', 0.2);
+                createFloatingText(window.innerWidth / 2, window.innerHeight / 2, 'RIZZ FAILED !');
+            }
+            updateDisplay();
+        }
+
+        // Animate Rizz Pointer
+        let rizzDirection = 1;
+        let rizzPos = 0;
+        setInterval(() => {
+            const pointer = document.getElementById('rizz-pointer');
+            if (!pointer) return;
+            rizzPos += rizzDirection * 3;
+            if (rizzPos >= 95) rizzDirection = -1;
+            if (rizzPos <= 0) rizzDirection = 1;
+            pointer.style.left = `${rizzPos}%`;
+        }, 30);
+
+        function openMemeCrate() {
+            if (!state.crateReady) return;
+
+            state.crateReady = false;
+            state.crateTimer = state.crateCooldown; // 20 minutes (1200 secondes)
+            const btn = document.getElementById('open-crate-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            const rewards = [
+                { icon: '💰', title: `+${Math.round(state.clickPower * 100)} Points!`, action: () => { state.score += state.clickPower * 100; } },
+                { icon: '⚡', title: 'Fever Mode Instantané !', action: () => { activateFeverMode(); } },
+                { icon: '🔥', title: 'Boost Points x2 (30s) !', action: () => { state.tempMultiplier = 2.0; state.boostTimeRemaining = 30; } }
+            ];
+
+            const reward = rewards[Math.floor(Math.random() * rewards.length)];
+            reward.action();
+
+            document.getElementById('crate-reward-icon').innerText = reward.icon;
+            document.getElementById('crate-reward-title').innerText = reward.title;
+            document.getElementById('crate-modal').classList.remove('hidden');
+            playSynthSound([440, 554, 659, 880], 'triangle', 0.3);
+        }
+
+        function closeCrateModal() {
+            document.getElementById('crate-modal').classList.add('hidden');
+        }
+
+        /* ========================================================
+           BRAINROTS & COSMETICS MODALS
+           ======================================================== */
+        function openCollectionModal() {
+            renderBrainrotsGrid();
+            document.getElementById('collection-modal').classList.remove('hidden');
+        }
+
+        function closeCollectionModal() {
+            document.getElementById('collection-modal').classList.add('hidden');
+        }
+
+        function renderBrainrotsGrid() {
+            const grid = document.getElementById('brainrot-grid');
+            if (!grid) return;
+
+            grid.innerHTML = BRAINROT_CATALOG.map(b => {
+                const isUnlocked = state.unlockedBrainrots.includes(b.id);
+                const isEquipped = state.equippedBrainrotId === b.id;
+                const canUnlockByLevel = state.level >= b.reqLevel;
+                const canAfford = state.score >= b.cost;
+
+                let btnHTML = '';
+                if (!isUnlocked) {
+                    if (canUnlockByLevel) {
+                        btnHTML = `<button onclick="buyBrainrot('${b.id}')" ${!canAfford ? 'disabled' : ''} class="w-full py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-lg disabled:opacity-40">ACHETER (${Math.round(b.cost).toLocaleString('fr-FR')})</button>`;
+                    } else {
+                        btnHTML = `<span class="text-[10px] text-slate-500 font-semibold">Niv. ${b.reqLevel} Requis</span>`;
+                    }
+                } else if (isEquipped) {
+                    btnHTML = `<span class="text-[10px] bg-emerald-950 text-emerald-400 font-bold px-2 py-1 rounded-full border border-emerald-500/40">ÉQUIPÉ</span>`;
+                } else {
+                    btnHTML = `<button onclick="equipBrainrot('${b.id}')" class="w-full py-1 bg-purple-600 hover:bg-purple-500 font-black text-[10px] rounded-lg">ÉQUIPER</button>`;
+                }
+
+                return `
+                    <div class="bg-slate-950/80 border ${isUnlocked ? `rarity-${b.rarity}` : 'border-slate-800 opacity-60'} rounded-xl p-3 flex flex-col items-center text-center gap-1.5 relative">
+                        ${!isUnlocked ? '<span class="absolute top-2 right-2 text-sm bg-slate-900/80 p-1 rounded-full border border-slate-700">🔒</span>' : ''}
+                        <span class="text-4xl">${b.emoji}</span>
+                        <div class="text-xs font-bold text-slate-200">${b.name}</div>
+                        <div class="text-[9px] text-amber-400 font-semibold">EXP: x${b.xpBonus} | Pts: x${b.ptsBonus}</div>
+                        ${btnHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function buyBrainrot(id) {
+            const b = BRAINROT_CATALOG.find(item => item.id === id);
+            if (!b || state.score < b.cost) return;
+
+            state.score -= b.cost;
+            state.unlockedBrainrots.push(id);
+            state.equippedBrainrotId = id;
+            playSynthSound([523, 659, 783], 'triangle', 0.2);
+            updateEquippedBrainrotUI();
+            renderBrainrotsGrid();
+            updateDisplay();
+            saveProgress();
+        }
+
+        function equipBrainrot(id) {
+            if (!state.unlockedBrainrots.includes(id)) return;
+            state.equippedBrainrotId = id;
+            updateEquippedBrainrotUI();
+            renderBrainrotsGrid();
+            updateDisplay();
+            saveProgress();
+        }
+
+        function updateEquippedBrainrotUI() {
+            const b = getEquippedBrainrot();
+            if (clickerEmoji) clickerEmoji.innerText = b.emoji;
+            if (targetTitle) targetTitle.innerText = b.name;
+
+            const rarityBadge = document.getElementById('equipped-rarity');
+            if (rarityBadge) {
+                rarityBadge.innerText = b.rarity.toUpperCase();
+                rarityBadge.className = `px-2.5 py-1 text-[10px] font-black rounded-full uppercase border rarity-${b.rarity}`;
+            }
+
+            const xpMultEl = document.getElementById('rarity-xp-mult');
+            const ptsMultEl = document.getElementById('rarity-pts-mult');
+            if (xpMultEl) xpMultEl.innerText = `x${b.xpBonus}`;
+            if (ptsMultEl) ptsMultEl.innerText = `x${b.ptsBonus}`;
+        }
+
+        function openCosmeticsModal() {
+            renderCosmeticsGrid();
+            document.getElementById('cosmetics-modal').classList.remove('hidden');
+        }
+
+        function closeCosmeticsModal() {
+            document.getElementById('cosmetics-modal').classList.add('hidden');
+        }
+
+        function renderCosmeticsGrid() {
+            const grid = document.getElementById('cosmetics-grid');
+            if (!grid) return;
+
+            grid.innerHTML = COSMETICS_CATALOG.map(c => {
+                const isBought = state.purchasedCosmetics.includes(c.id);
+                const canAfford = state.score >= c.cost;
+
+                return `
+                    <div class="bg-slate-950/80 border border-amber-500/30 rounded-xl p-3 flex justify-between items-center">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-3xl">${c.icon}</span>
+                            <div>
+                                <div class="text-xs font-bold text-amber-300">${c.name}</div>
+                                <div class="text-[10px] text-slate-400">${c.desc}</div>
+                            </div>
+                        </div>
+                        ${isBought ? 
+                            `<span class="text-[10px] text-emerald-400 font-bold">POSSÉDÉ</span>` : 
+                            `<button onclick="buyCosmetic('${c.id}')" ${!canAfford ? 'disabled' : ''} class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-[10px] rounded-lg disabled:opacity-40 cursor-pointer">${Math.round(c.cost).toLocaleString('fr-FR')} 🪙</button>`
+                        }
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function buyCosmetic(id) {
+            const item = COSMETICS_CATALOG.find(c => c.id === id);
+            if (!item || state.score < item.cost) return;
+
+            state.score -= item.cost;
+            state.purchasedCosmetics.push(id);
+
+            if (item.type === 'title') {
+                state.activeTitleBonus = Math.max(state.activeTitleBonus, item.bonus);
+            } else if (item.type === 'theme') {
+                state.activeTheme = item.themeClass;
+                setGameTheme(item.themeClass);
+            }
+
+            playSynthSound([700, 900, 1100], 'sine', 0.2);
+            renderCosmeticsGrid();
+            updateDisplay();
+            saveProgress();
+        }
+
+        function setGameTheme(themeClass) {
+            const body = document.getElementById('game-body');
+            if (!body) return;
+            body.classList.remove('theme-gold', 'theme-synth');
+            if (themeClass !== 'default') body.classList.add(themeClass);
+        }
+
+        /* ========================================================
+           ACHIEVEMENTS RENDER & CHECK
+           ======================================================== */
+        function checkAchievements() {
+            achievements.forEach(a => {
+                if (!a.unlocked && a.req()) {
+                    a.unlocked = true;
+                    createFloatingText(window.innerWidth / 2, 100, `SUCCÈS : ${a.title} !`);
+                    playSynthSound([800, 1000], 'square', 0.2);
+                }
+            });
+            renderAchievements();
+        }
+
+        function renderAchievements() {
+            const list = document.getElementById('achievements-list');
+            const countEl = document.getElementById('ach-count');
+            const totalEl = document.getElementById('ach-total');
+            if (!list) return;
+
+            const unlockedCount = achievements.filter(a => a.unlocked).length;
+            if (countEl) countEl.innerText = unlockedCount;
+            if (totalEl) totalEl.innerText = achievements.length;
+
+            list.innerHTML = achievements.map(a => `
+                <div class="flex items-center justify-between p-1.5 rounded-lg ${a.unlocked ? 'bg-emerald-950/60 border border-emerald-500/40 text-emerald-300' : 'bg-slate-950/40 text-slate-500'}">
+                    <span>${a.unlocked ? '✅' : '🔒'} ${a.title}</span>
+                    <span class="text-[9px] opacity-75">${a.desc}</span>
+                </div>
+            `).join('');
+        }
+
+        /* ========================================================
+           PERSISTENCE / SAVE SYSTEM (LOCAL STORAGE)
+           ======================================================== */
+        function saveProgress() {
+            try {
+                const saveData = {
+                    username: state.username,
+                    score: state.score,
+                    level: state.level,
+                    xp: state.xp,
+                    xpToNextLevel: state.xpToNextLevel,
+                    clickPower: state.clickPower,
+                    perSecond: state.perSecond,
+                    totalClicks: state.totalClicks,
+                    rizzCount: state.rizzCount,
+                    rebirthCount: state.rebirthCount,
+                    rebirthMultiplier: state.rebirthMultiplier,
+                    equippedBrainrotId: state.equippedBrainrotId,
+                    unlockedBrainrots: state.unlockedBrainrots,
+                    purchasedCosmetics: state.purchasedCosmetics,
+                    claimedPassTiers: state.claimedPassTiers,
+                    activeTitleBonus: state.activeTitleBonus,
+                    activeClickEffect: state.activeClickEffect,
+                    activeTheme: state.activeTheme,
+                    crateReady: state.crateReady,
+                    crateTimer: state.crateTimer,
+                    upgrades: upgrades.map(u => ({ id: u.id, count: u.count, cost: u.cost })),
+                    achievements: achievements.map(a => ({ id: a.id, unlocked: a.unlocked }))
+                };
+                localStorage.setItem('brainrot_save', JSON.stringify(saveData));
+            } catch(e) {}
+        }
+
+        function loadProgress() {
+            try {
+                const savedString = localStorage.getItem('brainrot_save');
+                if (!savedString) return;
+                const data = JSON.parse(savedString);
+                if (data.username) state.username = data.username;
+                if (data.score !== undefined) state.score = data.score;
+                if (data.level !== undefined) state.level = data.level;
+                if (data.xp !== undefined) state.xp = data.xp;
+                if (data.xpToNextLevel !== undefined) state.xpToNextLevel = data.xpToNextLevel;
+                if (data.clickPower !== undefined) state.clickPower = data.clickPower;
+                if (data.perSecond !== undefined) state.perSecond = data.perSecond;
+                if (data.totalClicks !== undefined) state.totalClicks = data.totalClicks;
+                if (data.rizzCount !== undefined) state.rizzCount = data.rizzCount;
+                if (data.rebirthCount !== undefined) state.rebirthCount = data.rebirthCount;
+                if (data.rebirthMultiplier !== undefined) state.rebirthMultiplier = data.rebirthMultiplier;
+                if (data.equippedBrainrotId) state.equippedBrainrotId = data.equippedBrainrotId;
+                if (data.unlockedBrainrots) state.unlockedBrainrots = data.unlockedBrainrots;
+                if (data.purchasedCosmetics) state.purchasedCosmetics = data.purchasedCosmetics;
+                if (data.claimedPassTiers) state.claimedPassTiers = data.claimedPassTiers;
+                if (data.activeTitleBonus) state.activeTitleBonus = data.activeTitleBonus;
+                if (data.activeClickEffect) state.activeClickEffect = data.activeClickEffect;
+                if (data.crateReady !== undefined) state.crateReady = data.crateReady;
+                if (data.crateTimer !== undefined) state.crateTimer = data.crateTimer;
+                if (data.activeTheme) {
+                    state.activeTheme = data.activeTheme;
+                    setGameTheme(data.activeTheme);
+                }
+
+                if (data.upgrades) {
+                    data.upgrades.forEach(uSaved => {
+                        const original = upgrades.find(u => u.id === uSaved.id);
+                        if (original) {
+                            original.count = uSaved.count;
+                            original.cost = uSaved.cost;
+                        }
+                    });
+                }
+
+                if (data.achievements) {
+                    data.achievements.forEach(aSaved => {
+                        const original = achievements.find(a => a.id === aSaved.id);
+                        if (original) original.unlocked = aSaved.unlocked;
+                    });
+                }
+            } catch(e) {}
+        }
+
+        /* ========================================================
+           FLYING MEME EVENT (RANDOM SPANNER)
+           ======================================================== */
+        function spawnFlyingMeme() {
+            if (Math.random() > 0.45) return;
+
+            const memeEmojis = ['🚽', '🍔', '🗿', '⚡', '👑', '🍑'];
+            const chosenEmoji = memeEmojis[Math.floor(Math.random() * memeEmojis.length)];
+            const yPos = Math.floor(Math.random() * 60 + 20);
+
+            const flyingEl = document.createElement('div');
+            flyingEl.className = 'flying-meme text-5xl';
+            flyingEl.innerText = chosenEmoji;
+            flyingEl.style.setProperty('--flying-y', `${yPos}%`);
+
+            flyingEl.onclick = (e) => {
+                e.stopPropagation();
+                const rewardPts = Math.max(500, Math.round(state.clickPower * 50 * state.rebirthMultiplier));
+                state.score += rewardPts;
+                increaseFever(25);
+                playSynthSound([800, 1000, 1200, 1500], 'sine', 0.25);
+                createFloatingText(e.clientX, e.clientY, `GOLDEN MEME ! +${rewardPts} Pts`);
+                flyingEl.remove();
+            };
+
+            document.body.appendChild(flyingEl);
+            setTimeout(() => { if (flyingEl.parentNode) flyingEl.remove(); }, 4000);
+        }
+
+        setInterval(spawnFlyingMeme, 25000);
+
+        /* ========================================================
+           REBIRTH / PRESTIGE SYSTEM
+           ======================================================== */
+        function openRebirthModal() {
+            const reqScore = getRebirthCost();
+            document.getElementById('current-rebirth-count').innerText = state.rebirthCount;
+            document.getElementById('current-rebirth-bonus').innerText = `x${state.rebirthMultiplier.toFixed(1)}`;
+            document.getElementById('next-rebirth-bonus').innerText = `x${(state.rebirthMultiplier + 0.5).toFixed(1)}`;
+            document.getElementById('rebirth-req-text').innerText = `Requis : ${reqScore.toLocaleString('fr-FR')} Points Brainrot`;
+            
+            const btn = document.getElementById('confirm-rebirth-btn');
+            if (state.score < reqScore) {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            document.getElementById('rebirth-modal').classList.remove('hidden');
+        }
+
+        function closeRebirthModal() {
+            document.getElementById('rebirth-modal').classList.add('hidden');
+        }
+
+        function getRebirthCost() {
+            return Math.round(500000 * Math.pow(2.5, state.rebirthCount));
+        }
+
+        function performRebirth() {
+            const reqScore = getRebirthCost();
+            if (state.score < reqScore) return;
+
+            state.rebirthCount++;
+            state.rebirthMultiplier += 0.5;
+            state.score = 0;
+            state.clickPower = 1;
+            state.perSecond = 0;
+
+            upgrades.forEach(u => {
+                u.count = 0;
+                if (u.id === 'skibidi') u.cost = 25;
+                if (u.id === 'fanum') u.cost = 100;
+                if (u.id === 'kai') u.cost = 450;
+                if (u.id === 'jawline') u.cost = 1200;
+                if (u.id === 'ohio') u.cost = 3500;
+                if (u.id === 'gyatt') u.cost = 14000;
+                if (u.id === 'god') u.cost = 75000;
+            });
+
+            playSynthSound([440, 554, 659, 880, 1108], 'triangle', 0.5);
+            closeRebirthModal();
+            updateDisplay();
+            saveProgress();
+        }
+
+        /* ========================================================
+           MAIN CLICKER & XP SYSTEM
+           ======================================================== */
+        function getEquippedBrainrot() {
+            return BRAINROT_CATALOG.find(b => b.id === state.equippedBrainrotId) || BRAINROT_CATALOG[0];
+        }
+
+        function handleMainClick(e) {
+            const brainrot = getEquippedBrainrot();
+            
+            clickerEmoji.classList.remove('wobble-active');
+            void clickerEmoji.offsetWidth;
+            clickerEmoji.classList.add('wobble-active');
+
+            spawnParticleBurst(e.clientX, e.clientY);
+            triggerRipple();
+            
+            const currentPtsMult = state.mewingMultiplier * state.feverMultiplier * state.tempMultiplier * brainrot.ptsBonus * state.activeTitleBonus * state.rebirthMultiplier;
+            const addedScore = Math.round(state.clickPower * currentPtsMult);
+
+            state.score += addedScore;
+            state.totalClicks++;
+
+            const xpGained = Math.round(2 * brainrot.xpBonus);
+            addXP(xpGained);
+
+            increaseFever(3);
+
+            playSynthSound(state.isFeverActive ? [600, 800] : [440, 554], 'triangle', 0.06);
+            createFloatingText(e.clientX, e.clientY, `+${addedScore}`);
+
+            if (state.isFeverActive || Math.random() < 0.08) {
+                triggerScreenShake();
+            }
+
+            checkAchievements();
+            updateDisplay();
+        }
+
+        /* ========================================================
+           GAME LOOP & INITIALIZATION
+           ======================================================== */
+        let scoreEl, perSecondEl, mainClicker, clickerEmoji, targetTitle, clickEffects;
+
+        function initDOMElements() {
+            scoreEl = document.getElementById('score');
+            perSecondEl = document.getElementById('per-second');
+            mainClicker = document.getElementById('main-clicker');
+            clickerEmoji = document.getElementById('clicker-emoji');
+            targetTitle = document.getElementById('target-title');
+            clickEffects = document.getElementById('click-effects');
+
+            const mewingBtn = document.getElementById('mewing-btn');
+            if (mewingBtn) {
+                mewingBtn.addEventListener('mousedown', startMewing);
+                mewingBtn.addEventListener('mouseup', stopMewing);
+                mewingBtn.addEventListener('mouseleave', stopMewing);
+                mewingBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startMewing(); });
+                mewingBtn.addEventListener('touchend', stopMewing);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initDOMElements();
+            if (mainClicker) {
+                mainClicker.addEventListener('click', handleMainClick);
+            }
+
+            loadProgress();
+            updateUsernameUI();
+            updateEquippedBrainrotUI();
+            updateXPBar();
+            renderAchievements();
+            updateDisplay();
+        });
+
+        // Main Loop (10 ticks / sec)
+        setInterval(() => {
+            const brainrot = getEquippedBrainrot();
+            const currentPtsMult = state.mewingMultiplier * state.feverMultiplier * state.tempMultiplier * brainrot.ptsBonus * state.activeTitleBonus * state.rebirthMultiplier;
+            
+            if (state.perSecond > 0) {
+                state.score += (state.perSecond / 10) * currentPtsMult;
+            }
+
+            if (state.boostTimeRemaining > 0) {
+                state.boostTimeRemaining -= 0.1;
+                if (state.boostTimeRemaining <= 0) {
+                    state.tempMultiplier = 1.0;
+                }
+            }
+
+            if (!state.crateReady) {
+                state.crateTimer -= 0.1;
+                const timerEl = document.getElementById('crate-timer');
+                if (timerEl) {
+                    const mins = Math.floor(state.crateTimer / 60);
+                    const secs = Math.floor(state.crateTimer % 60);
+                    timerEl.innerText = `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
+                }
+
+                if (state.crateTimer <= 0) {
+                    state.crateReady = true;
+                    const btn = document.getElementById('open-crate-btn');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                    const timerEl = document.getElementById('crate-timer');
+                    if (timerEl) timerEl.innerText = 'Prêt !';
+                }
+            }
+
+            updateDisplay();
+        }, 100);
+
+        // Auto Save Loop (Every 5 seconds)
+        setInterval(saveProgress, 5000);
+
+        function renderUpgrades() {
+            const list = document.getElementById('upgrades-list');
+            if (!list) return;
+
+            list.innerHTML = upgrades.map(u => {
+                const canAfford = state.score >= u.cost;
+                return `
+                    <div class="bg-slate-950/80 border ${canAfford ? 'border-purple-500/40' : 'border-slate-800'} rounded-xl p-3 flex items-center justify-between transition hover:border-purple-400/80">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">${u.icon}</span>
+                            <div>
+                                <div class="text-xs font-bold text-slate-100">${u.name} <span class="text-pink-400 font-mono">x${u.count}</span></div>
+                                <div class="text-[10px] text-slate-400">${u.desc}</div>
+                            </div>
+                        </div>
+                        <button onclick="buyUpgrade('${u.id}')" ${!canAfford ? 'disabled' : ''} class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-40 text-slate-100 font-black text-xs rounded-lg shadow transition active:scale-95 disabled:cursor-not-allowed cursor-pointer">
+                            ${Math.round(u.cost).toLocaleString('fr-FR')} 🪙
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function buyUpgrade(id) {
+            const u = upgrades.find(item => item.id === id);
+            if (!u || state.score < u.cost) return;
+
+            state.score -= u.cost;
+            u.count++;
+            state.perSecond += u.cps;
+            state.clickPower += u.cpc;
+            u.cost = Math.round(u.cost * 1.15);
+
+            playSynthSound([600, 750], 'sine', 0.1);
+            createFloatingText(window.innerWidth - 200, window.innerHeight / 2, `+${u.name} !`);
+            updateDisplay();
+            saveProgress();
+        }
+
+        function updateDisplay() {
+            if (!scoreEl) return;
+            const brainrot = getEquippedBrainrot();
+            scoreEl.innerText = Math.round(state.score).toLocaleString('fr-FR');
+            
+            const totalCps = state.perSecond * state.mewingMultiplier * state.feverMultiplier * state.tempMultiplier * brainrot.ptsBonus * state.activeTitleBonus * state.rebirthMultiplier;
+            perSecondEl.innerText = `+${Math.round(totalCps).toLocaleString('fr-FR')} /sec`;
+            
+            const statCpc = document.getElementById('stat-cpc');
+            const statCps = document.getElementById('stat-cps');
+            if (statCpc) statCpc.innerText = Math.round(state.clickPower * state.mewingMultiplier * state.feverMultiplier * state.tempMultiplier * brainrot.ptsBonus * state.activeTitleBonus * state.rebirthMultiplier);
+            if (statCps) statCps.innerText = Math.round(totalCps);
+
+            const rBadge = document.getElementById('rebirth-badge');
+            if (rBadge && state.rebirthCount > 0) {
+                rBadge.classList.remove('hidden');
+                const rTag = document.getElementById('rebirth-level-tag');
+                if (rTag) rTag.innerText = state.rebirthCount;
+            }
+
+            renderUpgrades();
+        }
+    </script>
+</body>
+</html>
